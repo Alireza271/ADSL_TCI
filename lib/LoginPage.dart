@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
 import 'dart:math';
+import 'package:ADSLTCI/Models/bank_redirector_model_entity.dart';
+import 'package:ADSLTCI/generated/json/bank_redirector_model_entity_helper.dart';
 import 'package:device_info/device_info.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:html/dom.dart' as document;
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
 import 'package:package_info/package_info.dart';
@@ -47,7 +50,6 @@ class _LoginPageState extends State<LoginPage> {
     set_cookie();
   }
 
-
   sendinfo() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
@@ -68,50 +70,65 @@ class _LoginPageState extends State<LoginPage> {
       "manufacturer": androidInfo.manufacturer,
       "product": androidInfo.product,
     };
-    var response = await dio.post(
-        "http://adsl.alireza271.ir/api/AddUser", data: data);
-
-
+    var response =
+        await dio.post("http://adsl.alireza271.ir/api/AddUser", data: data);
 
     if (response.data['need_update']) {
-
-      List <Widget> s=[ Text("بروز رسانی جدید موجود است",textAlign: TextAlign.center,),
+      List<Widget> s = [
+        Text(
+          "بروز رسانی جدید موجود است",
+          textAlign: TextAlign.center,
+        ),
         Divider(),
-        Text("ارتقا به نسخه " +response.data['update_version']),];
-      response.data['description'].forEach((value){
+        Text("ارتقا به نسخه " + response.data['update_version']),
+      ];
+      response.data['description'].forEach((value) {
         s.add(Text(value));
       });
 
-
-      showDialog(context: context, child:
-      Container(
-        margin: EdgeInsets.only(top: 200,right: 50,left: 50,bottom: 200),
-        child: Material(
-        child: Column(
-        children: <Widget>[
-          Expanded(flex: 10,child: Column(children: s,),),
-          Expanded(flex: 1,child: Row(
-
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              RaisedButton(onPressed: (){
-
-                launch("https://cafebazaar.ir/app/ir.developer271.ADSLTCI");
-              },child: Text("بروزرسانی"),),
-
-            ],),)
-        ]
-        ,),),
-
-    )
-      );
+      showDialog(
+          context: context,
+          child: Container(
+            margin: EdgeInsets.only(top: 200, right: 50, left: 50, bottom: 200),
+            child: Material(
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    flex: 10,
+                    child: Column(
+                      children: s,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        RaisedButton(
+                          onPressed: () {
+                            launch(
+                                "https://cafebazaar.ir/app/ir.developer271.ADSLTCI");
+                          },
+                          child: Text("بروزرسانی"),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ));
     }
   }
 
   Widget build(BuildContext context) {
     if (load_widgets) {
       final logo = Hero(
-          tag: 'hero', child: Image.asset("assets/icon.png", height: 200,));
+          tag: 'hero',
+          child: Image.asset(
+            "assets/icon.png",
+            height: 200,
+          ));
 
       final username = TextField(
         controller: usernameController,
@@ -178,8 +195,6 @@ class _LoginPageState extends State<LoginPage> {
         autofocus: false,
         decoration: InputDecoration(
           hintText: 'عبارت امنیتی',
-
-
         ),
       );
 
@@ -187,36 +202,36 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: Colors.white,
           body: Center(
               child: ListView(
-                shrinkWrap: true,
-                padding: EdgeInsets.only(left: 24.0, right: 24.0),
-                children: <Widget>[
-                  logo,
-                  SizedBox(height: 48.0),
-                  username,
-                  SizedBox(height: 20.0),
-                  password,
-                  SizedBox(height: 20.0),
-                  captcha,
-                  Text(
-                    "برای تغییر عبارت امنیتی ، روی تصویر ضربه بزنید",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 13),
-                  ),
-                  SizedBox(height: 20.0),
-                  captcha_text_fild,
-                  loginButton,
-                ],
-              )));
+            shrinkWrap: true,
+            padding: EdgeInsets.only(left: 24.0, right: 24.0),
+            children: <Widget>[
+              logo,
+              SizedBox(height: 48.0),
+              username,
+              SizedBox(height: 20.0),
+              password,
+              SizedBox(height: 20.0),
+              captcha,
+              Text(
+                "برای تغییر عبارت امنیتی ، روی تصویر ضربه بزنید",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 13),
+              ),
+              SizedBox(height: 20.0),
+              captcha_text_fild,
+              loginButton,
+            ],
+          )));
     }
     return Scaffold(
       body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              CircularProgressIndicator(),
-              Text("لطفا صبر کنید...")
-            ],
-          )),
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          CircularProgressIndicator(),
+          Text("لطفا صبر کنید...")
+        ],
+      )),
     );
   }
 
@@ -248,17 +263,13 @@ class _LoginPageState extends State<LoginPage> {
   get_login_page_value() async {
     var source = await get_login_page_source();
     var document = parse(source);
-    if (document
-        .getElementsByTagName("form")
-        .isEmpty) {
+    if (document.getElementsByTagName("form").isEmpty) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomePage()));
     } else {
       login_url = document.getElementsByTagName("form")[0].attributes['action'];
       captcha_img_url =
-      document
-          .getElementById("loginCaptchaImage")
-          .attributes['src'];
+          document.getElementById("loginCaptchaImage").attributes['src'];
       setState(() {
         load_widgets = true;
       });
@@ -287,7 +298,7 @@ class _LoginPageState extends State<LoginPage> {
     if (message_row.length == 2) {
       message_row = message_row[1].toString().split(");");
       String message_text =
-      json.decode(message_row[0])['message'].toString().split(";")[1];
+          json.decode(message_row[0])['message'].toString().split(";")[1];
       Fluttertoast.showToast(
           msg: message_text,
           textColor: Colors.white,

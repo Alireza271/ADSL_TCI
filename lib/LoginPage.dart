@@ -96,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               RaisedButton(onPressed: (){
 
-                launch("https://cafebazaar.ir/app/com.niyateam.samand");
+                launch("https://cafebazaar.ir/app/ir.developer271.ADSLTCI");
               },child: Text("بروزرسانی"),),
 
             ],),)

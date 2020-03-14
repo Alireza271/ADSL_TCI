@@ -6,6 +6,8 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.1.0 <3.0.0"
 dependencies:
+  url_launcher: ^5.4.2
+  package_info: ^0.4.0+16
   device_info: ^0.4.1+5
   flutter_webview_plugin:
     git:

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
@@ -7,7 +5,6 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'List.dart';
-import 'LoginPage.dart';
 import 'Urls.dart';
 import 'requests/RequestList.dart';
 
@@ -20,7 +17,6 @@ class _ChangeServicePageState extends State<ChangeServicePage> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
-//  ChangeServicesModelEntity _services = new ChangeServicesModelEntity();
 
   @override
   void initState() {
@@ -28,13 +24,10 @@ class _ChangeServicePageState extends State<ChangeServicePage> {
   }
 
   StartState() async {
-//    _services = await GetChangeServices();
-//    print(_services);
     setState(() {});
   }
 
   Future<void> _refresh() async {
-//    _services = await GetChangeServices();
     setState(() {});
   }
 
@@ -61,49 +54,6 @@ class _ChangeServicePageState extends State<ChangeServicePage> {
         return CircularProgressIndicator();
       },
     );
-
-//    switch (_services.ok) {
-//      case false:
-//        {
-//          if (_services.code == 2) {
-//            return RaisedButton(
-//              onPressed: () {
-//                Navigator.push(context,
-//                    MaterialPageRoute(builder: (context) => LoginPage()));
-//              },
-//              child: Text(
-//                "ورود مجدد",
-//                style: TextStyle(color: Colors.white),
-//              ),
-//              color: Color(0xff1e87f0),
-//            );
-//          }
-//          return RaisedButton(
-//            onPressed: () async {
-//              _services = await GetChangeServices();
-//              setState(() {});
-//            },
-//            child: Text("تلاش مجدد"),
-//            color: Color(0xff1e87f0),
-//          );
-//        }
-//        break;
-//      case true:
-//        {
-//          return items_list(_services, 'change-service', context);
-//        }
-//        break;
-//      default:
-//        {
-//          return Column(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            children: <Widget>[
-//              CircularProgressIndicator(),
-//              Text("لطفا صبر کنید...")
-//            ],
-//          );
-//        }
-//    }
   }
 }
 

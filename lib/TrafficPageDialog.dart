@@ -234,7 +234,7 @@ class _DialogState extends State<TrafficPageDialog> {
                     if (pay_state) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                            Payment(BankRedirector, context);
+                            Payment(BankRedirector);
                             return TrafficPage();
                           }));
                     } else {

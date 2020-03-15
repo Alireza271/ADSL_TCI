@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'List.dart';
 import 'LoginPage.dart';
-import 'Models/traffic_model_entity.dart';
 import 'requests/RequestList.dart';
 
 class ServicePage extends StatefulWidget {

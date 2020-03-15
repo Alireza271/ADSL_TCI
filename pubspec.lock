@@ -114,15 +114,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_webview_plugin:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "2d24b22c5173058091ab44fd4ab9bee33388891d"
-      url: "https://github.com/Alireza271/flutter_webview_plugin.git"
-    source: git
-    version: "0.3.10+1"
   fluttertoast:
     dependency: "direct main"
     description:

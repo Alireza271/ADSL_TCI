@@ -218,7 +218,7 @@ class _IncrementDialog extends State<IncrementDialog> {
                     if (pay_state) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        Payment(BankRedirector, context);
+                        Payment(BankRedirector);
                         return HomePage();
                       }));
                     } else {

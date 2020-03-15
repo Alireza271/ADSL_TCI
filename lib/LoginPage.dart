@@ -1,16 +1,13 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
+import 'dart:io';
 import 'dart:math';
-import 'package:ADSLTCI/Models/bank_redirector_model_entity.dart';
-import 'package:ADSLTCI/PaymentPage.dart';
-import 'package:ADSLTCI/generated/json/bank_redirector_model_entity_helper.dart';
+import 'package:ADSLTCI/RulesDialog.dart';
 import 'package:device_info/device_info.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:html/dom.dart' as document;
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
 import 'package:package_info/package_info.dart';
@@ -25,9 +22,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String rules_message=null;
+
   String cookie;
 
-  FlutterWebviewPlugin webview = new FlutterWebviewPlugin();
   bool load_widgets = false;
   bool login_loading_button = false;
   String login_url;
@@ -48,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
     db = await SharedPreferences.getInstance();
     usernameController.text = db.getString("username");
     passwordController.text = db.getString("password");
-    set_cookie();
+    get_login_page_value();
   }
 
   sendinfo() async {
@@ -123,7 +121,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget build(BuildContext context) {
+
     if (load_widgets) {
+      final _formKey = GlobalKey<FormState>();
+
       final logo = Hero(
           tag: 'hero',
           child: Image.asset(
@@ -131,7 +132,13 @@ class _LoginPageState extends State<LoginPage> {
             height: 200,
           ));
 
-      final username = TextField(
+      final username = TextFormField(
+        validator: (value) {
+          if (value.isEmpty) return "نام کاربری خودرا وارد کنید";
+          if (value.length != 10 || value.split('')[0] == "0")
+            return "نام کاربری خود را به صورت 10 رقمی بدون صفر وارد کنید";
+          return null;
+        },
         controller: usernameController,
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
@@ -141,7 +148,11 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
 
-      final password = TextField(
+      final password = TextFormField(
+        validator: (value) {
+          if (value.isEmpty) return "کلمه عبور خودرا وارد کنید";
+          return null;
+        },
         controller: passwordController,
         textAlign: TextAlign.center,
         autofocus: false,
@@ -158,7 +169,14 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(24),
           ),
           onPressed: () async {
-            login_button_action();
+            if (_formKey.currentState.validate()) {
+              if (db.getBool("rules") ?? false) {
+                login_button_action();
+              } else {
+                rules_message = "برای ادامه کار باید قوانین را بپذیرید";
+                setState(() {});
+              }
+            }
           },
           padding: EdgeInsets.all(12),
           color: Colors.lightBlueAccent,
@@ -166,6 +184,36 @@ class _LoginPageState extends State<LoginPage> {
               ? CircularProgressIndicator()
               : Text('ورود', style: TextStyle(color: Colors.white))),
         ),
+      );
+
+      final Rules = Row(
+        children: <Widget>[
+          Checkbox(
+            activeColor: Colors.green,
+            value: db.getBool("rules") ?? false,
+            onChanged: (value) {
+              db.setBool("rules", value);
+              developer.log(value.toString());
+              rules_message=null;
+              setState(() {});
+            },
+          ),
+          InkWell(
+            child: Text(
+              "قوانین",
+              style: TextStyle(color: Colors.blue),
+            ),
+            onTap: () {
+              RulesDialog(context);
+
+            },
+          ),
+          Text(" را خوانده و میپذیرم."),
+          Text(
+            rules_message ??"",
+            style: TextStyle(color: Colors.red, fontSize: 10),
+          ),
+        ],
       );
 
       final captcha = GestureDetector(
@@ -189,7 +237,11 @@ class _LoginPageState extends State<LoginPage> {
         },
       );
 
-      final captcha_text_fild = TextField(
+      final captcha_text_fild = TextFormField(
+        validator: (value) {
+          if (value.isEmpty) return "عبارت امنیتی وارد کنید";
+          return null;
+        },
         controller: captchaController,
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
@@ -199,30 +251,35 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
 
-      return Scaffold(
-          backgroundColor: Colors.white,
-          body: Center(
-              child: ListView(
-            shrinkWrap: true,
-            padding: EdgeInsets.only(left: 24.0, right: 24.0),
-            children: <Widget>[
-              logo,
-              SizedBox(height: 48.0),
-              username,
-              SizedBox(height: 20.0),
-              password,
-              SizedBox(height: 20.0),
-              captcha,
-              Text(
-                "برای تغییر عبارت امنیتی ، روی تصویر ضربه بزنید",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 13),
-              ),
-              SizedBox(height: 20.0),
-              captcha_text_fild,
-              loginButton,
-            ],
-          )));
+      return Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+              backgroundColor: Colors.white,
+              body: Center(
+                  child: Form(
+                      key: _formKey,
+                      child: ListView(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.only(left: 24.0, right: 24.0),
+                        children: <Widget>[
+                          logo,
+                          SizedBox(height: 48.0),
+                          username,
+                          SizedBox(height: 20.0),
+                          password,
+                          captcha,
+                          Text(
+                            "برای تغییر عبارت امنیتی ، روی تصویر ضربه بزنید",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 13),
+                          ),
+                          SizedBox(height: 20.0),
+                          captcha_text_fild,
+                          loginButton,
+                          SizedBox(height: 20.0),
+                          Rules
+                        ],
+                      )))));
     }
     return Scaffold(
       body: Center(
@@ -236,34 +293,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  set_cookie() async {
-    await webview.launch(Urls.panel, hidden: true);
-    webview.onStateChanged.listen((state) async {
-      webview.getCookies().then((coo) async {
-        cookie = coo
-            .toString()
-            .replaceAll('"', "")
-            .replaceAll("{", "")
-            .replaceAll("}", "")
-            .replaceAll(":", "=")
-            .replaceAll(" ", "");
-        db.setString("cookie", cookie);
-        webview.close();
-        webview.dispose();
-        get_login_page_value();
-      });
-    });
-  }
-
   get_login_page_source() async {
     header = {"cookie": db.getString("cookie")};
     var response = await get(Urls.panel, headers: header);
-    return response.body;
+    return response;
   }
 
   get_login_page_value() async {
     var source = await get_login_page_source();
-    var document = parse(source);
+    var document = parse(source.body);
     if (document.getElementsByTagName("form").isEmpty) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomePage()));
@@ -271,6 +309,8 @@ class _LoginPageState extends State<LoginPage> {
       login_url = document.getElementsByTagName("form")[0].attributes['action'];
       captcha_img_url =
           document.getElementById("loginCaptchaImage").attributes['src'];
+      db.setString("cookie", source.headers["set-cookie"].toString());
+      header = {"cookie": db.getString("cookie")};
       setState(() {
         load_widgets = true;
       });
@@ -319,3 +359,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {});
   }
 }
+
+
+
+

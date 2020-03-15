@@ -1,15 +1,6 @@
-import 'dart:developer' as developer;
-import 'dart:math';
-
 import 'package:ADSLTCI/IncrementDialog.dart';
-import 'package:ADSLTCI/Urls.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:html/parser.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class IncreaseCreditPage extends StatefulWidget {
   @override
@@ -77,7 +68,7 @@ class _IncreaseCreditPage extends State<IncreaseCreditPage> {
                         color: Colors.lightBlueAccent,
                         child: (submit_loading
                             ? CircularProgressIndicator()
-                            : Text('ذخیره',
+                            : Text('پرداخت',
                                 style: TextStyle(color: Colors.white))),
                       ),
                     )

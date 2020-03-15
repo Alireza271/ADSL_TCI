@@ -249,7 +249,7 @@ class _ServicePageDialog extends State<ServicePageDialog> {
                     if (pay_state) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                            Payment(BankRedirector, context);
+                            Payment(BankRedirector);
                             return TrafficPage();
                           }));
                     } else {

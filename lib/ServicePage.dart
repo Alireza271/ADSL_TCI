@@ -39,6 +39,7 @@ class _ServicePageState extends State<ServicePage> {
     return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+            appBar: AppBar(),
             body: RefreshIndicator(
               key: _refreshIndicatorKey,
               onRefresh: _refresh,

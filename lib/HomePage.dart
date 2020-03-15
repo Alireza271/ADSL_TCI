@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'ChangeNetPassword.dart';
 import 'ChangeServicePage.dart';
 import 'IncreaseCreditPage.dart';
@@ -695,6 +696,8 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               Column(children: <Widget>[
+
+
                                 Image.asset(
                                   'assets/icon.png',
                                   height: 200,
@@ -703,7 +706,12 @@ class _HomePageState extends State<HomePage> {
                                   "271Developer@Gmail.Com",
                                   style:
                                       TextStyle(fontFamily: "", fontSize: 15),
-                                )
+
+                                ),
+                                InkWell(child: Text("حمایت",style: TextStyle(color: Colors.blue),),onTap: (){
+                                  launch("https://IDPay.ir/alireza271");
+
+                                },)
                               ])
                             ]),
                       ),

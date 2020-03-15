@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
-import 'dart:io';
 import 'dart:math';
 import 'package:ADSLTCI/RulesDialog.dart';
 import 'package:device_info/device_info.dart';
@@ -13,7 +12,6 @@ import 'package:http/http.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'HomePage.dart';
 import 'Urls.dart';
 
@@ -128,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
           tag: 'hero',
           child: Image.asset(
             "assets/icon.png",
-            height: 200,
+            height: 150,
           ));
 
       final username = TextFormField(
@@ -142,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.account_box),
+          suffixIcon: Icon(Icons.account_box),
           hintText: 'نام کاربری',
         ),
       );
@@ -156,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
         textAlign: TextAlign.center,
         autofocus: false,
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.vpn_key),
+          suffixIcon: Icon(Icons.vpn_key),
           hintText: 'کلمه عبور',
         ),
       );
@@ -164,19 +162,18 @@ class _LoginPageState extends State<LoginPage> {
       final loginButton = Padding(
         padding: EdgeInsets.symmetric(vertical: 16.0),
         child: RaisedButton(
+
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
-          onPressed: () async {
+          onPressed:(db.getBool("rules")??false ?() async {
             if (_formKey.currentState.validate()) {
-              if (db.getBool("rules") ?? false) {
-                login_button_action();
-              } else {
-                rules_message = "برای ادامه کار باید قوانین را بپذیرید";
-                setState(() {});
-              }
+
+              login_button_action();
+
+
             }
-          },
+          }:null) ,
           padding: EdgeInsets.all(12),
           color: Colors.lightBlueAccent,
           child: (login_loading_button
@@ -192,9 +189,10 @@ class _LoginPageState extends State<LoginPage> {
             value: db.getBool("rules") ?? false,
             onChanged: (value) {
               db.setBool("rules", value);
-              developer.log(value.toString());
-              rules_message = null;
-              setState(() {});
+              setState(() {
+
+              });
+
             },
           ),
           InkWell(
@@ -206,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
               RulesDialog(context);
             },
           ),
-          Text(" را خوانده و میپذیرم."),
+          Text(" را مطالعه کرده و میپذیرم."),
           Text(
             rules_message ?? "",
             style: TextStyle(color: Colors.red, fontSize: 10),
@@ -245,6 +243,7 @@ class _LoginPageState extends State<LoginPage> {
         textAlign: TextAlign.center,
         autofocus: false,
         decoration: InputDecoration(
+          suffixIcon: Icon(Icons.autorenew),
           hintText: 'عبارت امنیتی',
         ),
       );
@@ -261,10 +260,12 @@ class _LoginPageState extends State<LoginPage> {
                         padding: EdgeInsets.only(left: 24.0, right: 24.0),
                         children: <Widget>[
                           logo,
-                          SizedBox(height: 48.0),
+                          SizedBox(height: 30.0),
                           username,
                           SizedBox(height: 20.0),
                           password,
+                          SizedBox(height: 20.0),
+
                           captcha,
                           Text(
                             "برای تغییر عبارت امنیتی ، روی تصویر ضربه بزنید",
@@ -273,9 +274,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           SizedBox(height: 20.0),
                           captcha_text_fild,
-                          loginButton,
                           SizedBox(height: 20.0),
-                          Rules
+
+                          Rules,
+
+                          loginButton,
                         ],
                       )))));
     }

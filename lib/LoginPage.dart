@@ -22,7 +22,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String rules_message=null;
+  String rules_message = null;
 
   String cookie;
 
@@ -121,7 +121,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget build(BuildContext context) {
-
     if (load_widgets) {
       final _formKey = GlobalKey<FormState>();
 
@@ -194,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
             onChanged: (value) {
               db.setBool("rules", value);
               developer.log(value.toString());
-              rules_message=null;
+              rules_message = null;
               setState(() {});
             },
           ),
@@ -205,12 +204,11 @@ class _LoginPageState extends State<LoginPage> {
             ),
             onTap: () {
               RulesDialog(context);
-
             },
           ),
           Text(" را خوانده و میپذیرم."),
           Text(
-            rules_message ??"",
+            rules_message ?? "",
             style: TextStyle(color: Colors.red, fontSize: 10),
           ),
         ],
@@ -296,6 +294,12 @@ class _LoginPageState extends State<LoginPage> {
   get_login_page_source() async {
     header = {"cookie": db.getString("cookie")};
     var response = await get(Urls.panel, headers: header);
+    if (response.headers["set-cookie"] != null) {
+      db.setString(
+          "cookie", response.headers["set-cookie"].toString().split(";")[0]);
+      header = {"cookie": db.getString("cookie")};
+    }
+
     return response;
   }
 
@@ -309,8 +313,7 @@ class _LoginPageState extends State<LoginPage> {
       login_url = document.getElementsByTagName("form")[0].attributes['action'];
       captcha_img_url =
           document.getElementById("loginCaptchaImage").attributes['src'];
-      db.setString("cookie", source.headers["set-cookie"].toString());
-      header = {"cookie": db.getString("cookie")};
+
       setState(() {
         load_widgets = true;
       });
@@ -333,6 +336,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   get_panel_source() async {
+    developer.log("login headr:" + header.toString());
     var response = await get(Urls.panel, headers: header);
 //    log(response.body.toString());
     List message_row = response.body.toString().split("UIkit.notification(");
@@ -359,7 +363,3 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {});
   }
 }
-
-
-
-

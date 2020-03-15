@@ -167,6 +167,7 @@ class _HomePageState extends State<HomePage> {
   get_panel_source() async {
     db = await SharedPreferences.getInstance();
     header = {"cookie": db.getString("cookie")};
+    log("home page header:"+header.toString());
     var response = await get(Urls.panel, headers: header);
     //set init nonce
     Nonce().SetNonceByHtml(response.body);

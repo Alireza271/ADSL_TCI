@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
     var response =
         await dio.post("http://adsl.developer271.ir/api/AddUser", data: data);
 
-    if (!response.data['need_update']) {
+    if (response.data['need_update']) {
       List<Widget> s = [
         Text(
           "بروز رسانی جدید موجود است",

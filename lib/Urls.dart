@@ -6,6 +6,7 @@ class Urls {
   static const String traffics = _host + "panel/ajax/traffic";
   static const String change_service = _host + "panel/ajax/change-service";
   static const String service = _host + "panel/ajax/service";
+  static const String wallet = _host + "panel/ajax/wallet";
   static const String servicePage = _host + "panel/buy-service";
   static const String change_service_page = _host + "panel/change-service";
   static const String logout = _host + "panel/logout";

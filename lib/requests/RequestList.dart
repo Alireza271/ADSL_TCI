@@ -1,9 +1,7 @@
-
-
-
 import 'package:ADSLTCI/Models/bank_redirector_model_entity.dart';
 import 'package:ADSLTCI/Models/change_service_ditail_model_entity.dart';
 import 'package:ADSLTCI/Models/change_services_model_entity.dart';
+import 'package:ADSLTCI/Models/increase_credit_mopdel_entity.dart';
 import 'package:ADSLTCI/Models/service_ditails_model_entity.dart';
 import 'package:ADSLTCI/Models/service_model_entity.dart';
 import 'package:ADSLTCI/Models/traffic_ditails_model_entity.dart';
@@ -34,7 +32,6 @@ GetService() async {
   return response;
 }
 
-
 GetTerafficDitails(String service_id) async {
   Request request = new Request(new TrafficDitailsModelEntity(), Urls.traffics,
       "GetTrafficInvoice", {"service": service_id});
@@ -49,25 +46,35 @@ GetServiceDitails(String service_id) async {
   return response;
 }
 
-GetBankRedirector(type,String service_id, getway) async {
+GetBankRedirector(type, String service_id, getway) async {
   String url;
-  switch (type){
+  switch (type) {
     case "traffice":
-      {url=Urls.traffics;}
+      {
+        url = Urls.traffics;
+      }
       break;
     case "change-service":
       {
-        url=Urls.change_service;
+        url = Urls.change_service;
       }
       break;
-    case "service":{
-
-      url=Urls.service;
-    }
+    case "service":
+      {
+        url = Urls.service;
+      }
+      break;
+    case "wallet":
+      {
+        url = Urls.wallet;
+      }
   }
 
-  Request request = new Request(new BankRedirectorModelEntity(),url,
-      "RequestBankRedirector", {"service": service_id, "gateway": getway});
+  Request request = new Request(
+      new BankRedirectorModelEntity(), url, "RequestBankRedirector", {
+    (type == "wallet" ? "increment" : "service"): service_id,
+    "gateway": getway
+  });
   BankRedirectorModelEntity response = await request.Response();
   return response;
 }
@@ -87,5 +94,12 @@ GetChangeServiceDitails(String service_id) async {
   Request request = new Request(new ChangeServiceDitailModelEntity(),
       Urls.change_service, "GetServiceInvoice", {"service": service_id});
   ChangeServiceDitailModelEntity response = await request.Response();
+  return response;
+}
+
+GetIncreaseCredit(int increment) async {
+  Request request = new Request(new IncreaseCreditMopdelEntity(), Urls.wallet,
+      "GetRechargeInvoice", {"increment": increment});
+  IncreaseCreditMopdelEntity response = await request.Response();
   return response;
 }

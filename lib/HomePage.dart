@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ChangeNetPassword.dart';
 import 'ChangeServicePage.dart';
+import 'IncreaseCreditPage.dart';
 import 'LoginPage.dart';
 import 'ServicePage.dart';
 import 'TrafficPage.dart';

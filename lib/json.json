@@ -10,6 +10,34 @@
   "nonce": "c0bec313649e644e31488dcebd8dd215"
 }
 
+
+{
+  "ok": true,
+  "who": "U",
+  "code": 0,
+  "msg": "OK",
+  "result": {
+    "increment": 100000,
+    "total": 100000,
+    "panel": 40000,
+    "banks": [
+      {
+        "Serial": "649",
+        "Name": "بانک سامان-مخابرات ایران",
+        "Bank": "saman",
+        "Logo": "https:\/\/adsl.tci.ir\/panel\/assets\/images\/banks\/saman.png"
+      },
+      {
+        "Serial": "909",
+        "Name": "بانک پارسیان-مخابرات ایران",
+        "Bank": "parsianJadid",
+        "Logo": "https:\/\/adsl.tci.ir\/panel\/assets\/images\/banks\/parsianJadid.png"
+      }
+    ]
+  },
+  "nonce": "77d96456148640b7007e87e928014917"
+}
+
 //{
 //  "id": "ss",
 //  "action": "http://google.com",

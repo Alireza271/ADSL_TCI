@@ -638,6 +638,20 @@ class _HomePageState extends State<HomePage> {
                           builder: (context) => ChangeNetPasswordPage()));
                 },
               ),
+              ListTile(
+                title: Row(
+                  children: <Widget>[
+                    Icon(Icons.visibility_off),
+                    Text('افزایش اعتبار مالی پنل'),
+                  ],
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>IncreaseCreditPage()));
+                },
+              ),
             ],
           ),
         ),
